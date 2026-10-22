@@ -1,0 +1,16 @@
+# Recompute and verify every published figure: python verify_analysis.py
+pandas>=2.2
+numpy>=1.26
+scipy>=1.11
+duckdb>=1.5
+sqlglot>=25.0
+
+# Chart pack: python python/exploratory_visuals.py
+# 3.9 renamed Axes.boxplot's `labels` kwarg to `tick_labels`, and 3.11 removed the
+# old name - the script uses `tick_labels`, so it needs 3.9 or newer.
+matplotlib>=3.9
+
+# The variant x device interaction cell in python/ab_test_significance.ipynb.
+# That cell is wrapped in try/except, so the notebook still runs without it - but
+# then the repo's headline heterogeneity claim is untested.
+statsmodels>=0.14

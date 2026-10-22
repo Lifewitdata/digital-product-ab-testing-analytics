@@ -2,6 +2,10 @@
 
 > **Source note.** This document is reconstructed from
 > `data/raw_experiment_logs.csv`, the only record shipped with the logs.
+> The logs are **synthetic and anonymized** — 400 consecutive user ids
+> (`USR_2001`–`USR_2400`), session ids derived from them (`USR_2172` →
+> `SES_8172`), exactly 3 events per session — so nothing here is evidence
+> about a real checkout product; it is a worked method.
 > Everything under *Observed in the logs* is verified from the data.
 > The exact UI/experience change that defines Variant_B is **not recorded
 > in the logs** — add that one line here before this document is cited
@@ -43,7 +47,8 @@ Every session follows the same 3-event skeleton:
   - H1: completion rate B ≠ completion rate A (two-sided)
 - **H2 (guardrail):** Variant_B does not materially change time in checkout
   (session duration) and does not harm any device cohort — in particular
-  Mobile, the largest friction cohort in the funnel analyses.
+  Mobile, which carries the highest drop-off of the three device cohorts
+  (67.5% of its 163 users end in `drop_off`, vs 41.8% Desktop, 35.4% Tablet).
 
 ## Metrics
 
@@ -76,6 +81,13 @@ Every session follows the same 3-event skeleton:
    diagnostics only; the decision uses the final readout alone.
 6. **Bayesian cross-check:** Beta-posterior P(B > A) and expected loss of
    each ship / don't-ship choice.
+7. **Verification:** `python verify_analysis.py` recomputes all of the above
+   from the CSV, runs both SQL files on DuckDB and ties them to the pandas
+   cohort, diffs the notebook's stored outputs against fresh recomputation,
+   and string-matches the figures published in the README and this document.
+   It refits the variant × device and variant × segment logistic models with
+   its own Newton-Raphson solver, so the interaction claims do not depend on
+   statsmodels being installed.
 
 ## Decision rule applied
 

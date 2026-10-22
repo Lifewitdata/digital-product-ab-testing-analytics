@@ -109,7 +109,7 @@ for v, g in [("Control_A", A), ("Variant_B", B)]:
     groups += [g.loc[g["converted"] == 0, "duration"], g.loc[g["converted"] == 1, "duration"]]
     glabels += [f"{v}\ndropped off", f"{v}\ncompleted"]
 fig, ax = plt.subplots(figsize=(8, 4.2))
-ax.boxplot(groups, labels=glabels, patch_artist=True,
+ax.boxplot(groups, tick_labels=glabels, patch_artist=True,
            boxprops=dict(facecolor="#DCE6F1"))
 ax.set_ylabel("session duration (sec, elapsed at last event)")
 ax.set_title("Session duration by variant and outcome - guardrail is neutral")

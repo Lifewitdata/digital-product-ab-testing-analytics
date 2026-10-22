@@ -1,0 +1,43 @@
+name: verify
+
+# Every number published in this repo is recomputed here, on two Python
+# versions, from the committed CSV. The chart pack is also regenerated so a
+# broken script cannot hide behind committed PNGs.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Recompute and cross-check every published figure
+        run: python verify_analysis.py
+
+      - name: Regenerate the chart pack
+        run: python python/exploratory_visuals.py
+
+      - name: Confirm the regenerated charts are real images
+        run: |
+          ls -l python/charts
+          test "$(ls python/charts/*.png | wc -l)" -eq 6
